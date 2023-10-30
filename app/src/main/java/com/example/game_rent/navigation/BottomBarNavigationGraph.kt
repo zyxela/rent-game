@@ -26,6 +26,9 @@ fun BottomBarNavigationGraph(navController:NavHostController) {
         composable(Screen.ProfileScreen.route) {
             Profile(navController)
         }
+        composable(Screen.Authorization.route){
+            InterstitialGraph()
+        }
 
 
     }

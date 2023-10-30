@@ -7,11 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.game_rent.R
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -23,8 +21,8 @@ fun BottomNavigationBar(navController: NavController) {
 
 
     BottomNavigation(
-        backgroundColor = colorResource(id = R.color.teal_200),
-        contentColor = Color.Black
+        backgroundColor = Color(232, 243, 214),
+        contentColor = Color.Cyan
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -39,19 +37,11 @@ fun BottomNavigationBar(navController: NavController) {
                 },
                 selectedContentColor = Color.Black,
                 unselectedContentColor = Color.Black.copy(0.4f),
-                alwaysShowLabel = true,
+                alwaysShowLabel = false,
                 selected = currentRoute == item.route,
                 onClick = {
-                    navController.navigate(item.route) {
+                    navController.navigate(item.route)
 
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route) {
-                                saveState = true
-                            }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
                 }
             )
         }

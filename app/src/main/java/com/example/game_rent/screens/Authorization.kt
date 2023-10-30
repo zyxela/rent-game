@@ -24,7 +24,7 @@ import com.example.game_rent.navigation.Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Authorization(navController: NavController) {
-    var click by remember{ mutableStateOf(false) }
+    var click by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,9 +38,10 @@ fun Authorization(navController: NavController) {
         CentralButton(text = "Войти") {
             click = true
         }
-        if(click){
+        if (click) {
             navController.navigate(Screen.MainView.route)
         }
+
     }
 
 }

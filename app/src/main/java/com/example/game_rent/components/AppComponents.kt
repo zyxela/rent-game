@@ -1,8 +1,11 @@
 package com.example.game_rent.components
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -32,6 +35,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.game_rent.data_classes.CatalogItem
 
 @Composable
 fun CentralBoldText(value: String) {
@@ -114,4 +118,28 @@ fun CentralButton(text: String, onClick: () -> Unit) {
             textAlign = TextAlign.Center
         )
     }
+}
+
+@Composable
+fun LazyListCatalog(list: List<CatalogItem>){
+
+    LazyColumn{
+
+        items(list.count()) { index ->
+            Row() {
+                Column {
+                    Text(text = list[index].name)
+                    Text(text = "${list[index].price}", fontSize = 30.sp, fontWeight = FontWeight(600))
+                    Button(onClick = {
+
+                    }) {
+                        Text(text = "Добавить")
+                    }
+                }
+
+
+            }
+
+        }
+   }
 }

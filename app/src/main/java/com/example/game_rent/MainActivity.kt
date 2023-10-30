@@ -9,7 +9,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import com.example.game_rent.navigation.BottomBarNavigationGraph
-import com.example.game_rent.navigation.BottomNavigationBar
 import com.example.game_rent.navigation.InterstitialGraph
 
 class MainActivity : ComponentActivity() {
@@ -27,7 +26,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreenView(){
     val navController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController = navController) }
+        //bottomBar = { BottomNavigationBar(navController = navController) }
     ) {
         BottomBarNavigationGraph(navController)
     }

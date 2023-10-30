@@ -9,13 +9,14 @@ import com.example.game_rent.screens.Authorization
 
 @Composable
 fun InterstitialGraph(){
-    var navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.Authorization.route){
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = Screen.MainView.route){
         composable(Screen.Authorization.route){
             Authorization(navController = navController)
         }
         composable(Screen.MainView.route){
             MainScreenView()
         }
+
     }
 }
