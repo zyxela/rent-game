@@ -5,12 +5,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.game_rent.MainScreenView
+import com.example.game_rent.screens.Authorization
 import com.example.game_rent.screens.Catalog
 import com.example.game_rent.screens.MyCart
 import com.example.game_rent.screens.Profile
 
 @Composable
-fun BottomBarNavigationGraph(navController:NavHostController) {
+fun UserNavGraph(navController:NavHostController) {
 
     NavHost(navController, startDestination = Screen.CatalogScreen.route) {
         composable(Screen.MainView.route) {
@@ -26,10 +27,10 @@ fun BottomBarNavigationGraph(navController:NavHostController) {
         composable(Screen.ProfileScreen.route) {
             Profile(navController)
         }
-        composable(Screen.Authorization.route){
-            InterstitialGraph()
-        }
 
+        composable(Screen.Authorization.route){
+            Authorization(navController = navController)
+        }
 
     }
 }

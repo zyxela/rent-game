@@ -8,14 +8,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
-import com.example.game_rent.navigation.BottomBarNavigationGraph
-import com.example.game_rent.navigation.InterstitialGraph
+import com.example.game_rent.navigation.AdminNavGraph
+import com.example.game_rent.navigation.UserNavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            InterstitialGraph()
+            val navController = rememberNavController()
+            AdminNavGraph(navController)
+        //InterstitialGraph()
         }
     }
 }
@@ -28,6 +30,6 @@ fun MainScreenView(){
     Scaffold(
         //bottomBar = { BottomNavigationBar(navController = navController) }
     ) {
-        BottomBarNavigationGraph(navController)
+        UserNavGraph(navController)
     }
 }
