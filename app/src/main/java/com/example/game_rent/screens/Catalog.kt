@@ -55,43 +55,13 @@ fun Catalog(navController: NavHostController) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = null)
             })
 
-        val list = mutableListOf<CatalogItem>(
-            CatalogItem("God of War", 30.0),
-            CatalogItem("Call of Duty", 70.0),
-            CatalogItem("Cyberpunk", 100.0),
-            CatalogItem("GTA 6", 130.0),
-            CatalogItem("WoT: Blitz", 15.0), CatalogItem("God of War", 30.0),
-            CatalogItem("Cyberpunk", 100.0),
-            CatalogItem("GTA 6", 130.0),
-            CatalogItem("WoT: Blitz", 15.0),
-            CatalogItem("God of War", 30.0),
-            CatalogItem("Call of Duty", 70.0),
-            CatalogItem("Cyberpunk", 100.0),
-            CatalogItem("GTA 6", 130.0),
-            CatalogItem("WoT: Blitz", 15.0),
-            CatalogItem("God of War", 30.0),
-            CatalogItem("Call of Duty", 70.0),
-            CatalogItem("Cyberpunk", 100.0),
-            CatalogItem("GTA 6", 130.0),
-            CatalogItem("WoT: Blitz", 15.0),
-            CatalogItem("God of War", 30.0),
-            CatalogItem("Call of Duty", 70.0),
-            CatalogItem("Cyberpunk", 100.0),
-            CatalogItem("GTA 6", 130.0),
-            CatalogItem("WoT: Blitz", 15.0),
-            CatalogItem("God of War", 30.0),
-            CatalogItem("Call of Duty", 70.0),
-            CatalogItem("Cyberpunk", 100.0),
-            CatalogItem("GTA 6", 130.0),
-            CatalogItem("WoT: Blitz", 15.0),
-            CatalogItem("God of War", 30.0),
-            CatalogItem("Call of Duty", 70.0),
-            CatalogItem("Cyberpunk", 100.0),
-            CatalogItem("GTA 6", 130.0),
-            CatalogItem("WoT: Blitz", 15.0),
-            CatalogItem("God of War", 30.0),
-            CatalogItem("Call of Duty", 70.0)
-        )
+       val list= mutableListOf<CatalogItem>(
+           CatalogItem("God of War", 30.0),
+           CatalogItem("Call of Duty", 70.0),
+           CatalogItem("Cyberpunk", 100.0),
+           CatalogItem("GTA 6", 130.0),
+           CatalogItem("WoT: Blitz", 15.0), CatalogItem("God of War", 30.0),
+           CatalogItem("Cyberpunk", 100.0))//DatabaseInteraction().getCatalog()
 
 
 

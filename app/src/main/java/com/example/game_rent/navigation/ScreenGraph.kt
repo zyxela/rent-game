@@ -1,17 +1,21 @@
 package com.example.game_rent.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.game_rent.admin.screens.AdminCatalog
 import com.example.game_rent.admin.screens.Exit
 import com.example.game_rent.admin.screens.OrderList
+import com.example.game_rent.screens.Authorization
+import com.example.game_rent.screens.Catalog
+import com.example.game_rent.screens.MyCart
+import com.example.game_rent.screens.Profile
 
 @Composable
-fun AdminNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.OrderListScreen.route) {
+fun ScreenGraph() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = Screen.Authorization.route) {
         composable(Screen.OrderListScreen.route) {
             OrderList(navController = navController)
         }
@@ -23,8 +27,19 @@ fun AdminNavGraph(navController: NavHostController) {
             AdminCatalog(navController = navController)
         }
         composable(Screen.Authorization.route){
-            val ng = rememberNavController()
-            UserNavGraph(navController = ng)
+            Authorization(navController = navController)
         }
+
+
+        composable(Screen.CatalogScreen.route) {
+            Catalog(navController)
+        }
+        composable(Screen.MyCartScreen.route) {
+            MyCart(navController)
+        }
+        composable(Screen.ProfileScreen.route) {
+            Profile(navController)
+        }
+
     }
 }

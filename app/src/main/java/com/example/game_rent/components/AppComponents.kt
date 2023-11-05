@@ -55,7 +55,7 @@ fun CentralBoldText(value: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginInputField(text: String = "Логин") {
+fun LoginInputField(text: String = "Логин"):String {
     var loginText by remember { mutableStateOf("") }
     TextField(
         modifier = Modifier
@@ -70,11 +70,12 @@ fun LoginInputField(text: String = "Логин") {
             unfocusedIndicatorColor = Color.Transparent
         )
     )
+    return loginText
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordInputField(text: String = "Пароль") {
+fun PasswordInputField(text: String = "Пароль"):String {
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -106,6 +107,7 @@ fun PasswordInputField(text: String = "Пароль") {
             unfocusedIndicatorColor = Color.Transparent
         )
     )
+    return password
 }
 
 @Composable

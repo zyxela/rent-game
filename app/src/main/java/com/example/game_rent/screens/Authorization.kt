@@ -19,11 +19,13 @@ import com.example.game_rent.components.CentralBoldText
 import com.example.game_rent.components.CentralButton
 import com.example.game_rent.components.LoginInputField
 import com.example.game_rent.components.PasswordInputField
+import com.example.game_rent.data_classes.User
 import com.example.game_rent.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Authorization(navController: NavController) {
+    val admin = User("admin", "admin")
     var click by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -33,13 +35,17 @@ fun Authorization(navController: NavController) {
         verticalArrangement = Arrangement.Center
     ) {
         CentralBoldText("Вход")
-        LoginInputField()
-        PasswordInputField()
+        val login = LoginInputField()
+        val password = PasswordInputField()
         CentralButton(text = "Войти") {
             click = true
         }
         if (click) {
-            navController.navigate(Screen.MainView.route)
+            if (User(login, password) == admin) {
+                navController.navigate(Screen.OrderListScreen.route)
+            } else {
+                navController.navigate(Screen.CatalogScreen.route)
+            }
         }
 
     }
