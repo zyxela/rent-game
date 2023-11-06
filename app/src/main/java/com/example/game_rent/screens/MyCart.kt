@@ -25,12 +25,12 @@ import com.example.game_rent.navigation.BottomNavigationBar
 @Composable
 fun MyCart(navController: NavHostController) {
     val list = mutableListOf<CatalogItem>(
-        CatalogItem("God of War", 30.0),
+        /*CatalogItem("God of War", 30.0),
         CatalogItem("Call of Duty", 70.0),
         CatalogItem("Cyberpunk", 100.0),
         CatalogItem("GTA 6", 130.0),
         CatalogItem("WoT: Blitz", 15.0), CatalogItem("God of War", 30.0),
-        CatalogItem("Call of Duty", 70.0)
+        CatalogItem("Call of Duty", 70.0)*/
     )
     val checkedState = remember { mutableStateOf(MutableList(list.count()) { false }) }
     Column(

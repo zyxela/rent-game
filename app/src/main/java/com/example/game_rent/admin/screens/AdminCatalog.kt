@@ -16,24 +16,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.game_rent.data.DatabaseInteraction
 import com.example.game_rent.data_classes.CatalogItem
 import com.example.game_rent.navigation.AdminBottomNavigationBar
 
 @Composable
 fun AdminCatalog(navController: NavHostController) {
     val list = mutableListOf<CatalogItem>(
-        CatalogItem("God of War", 30.0),
-        CatalogItem("Call of Duty", 70.0),
-        CatalogItem("Cyberpunk", 100.0),
-        CatalogItem("GTA 6", 130.0),
-        CatalogItem("WoT: Blitz", 15.0), CatalogItem("God of War", 30.0),
-        CatalogItem("Cyberpunk", 100.0),
-        CatalogItem("GTA 6", 130.0),
-        CatalogItem("WoT: Blitz", 15.0),
-        CatalogItem("God of War", 30.0),
-        CatalogItem("Call of Duty", 70.0),
-        CatalogItem("Cyberpunk", 100.0)
     )
     Column(
         modifier = Modifier
@@ -73,7 +61,7 @@ fun AdminCatalog(navController: NavHostController) {
                 .fillMaxWidth()
                 .padding(4.dp),
                 onClick = {
-                    val list = mutableListOf<CatalogItem>(
+                    /*val list = mutableListOf<CatalogItem>(
                         CatalogItem("God of War", 30.0),
                         CatalogItem("Call of Duty", 70.0),
                         CatalogItem("Cyberpunk", 100.0),
@@ -92,8 +80,7 @@ fun AdminCatalog(navController: NavHostController) {
                         CatalogItem("Cyberpunk", 100.0),
                         CatalogItem("GTA 6", 130.0))
                     val db = DatabaseInteraction()
-                    db.connect()
-                    db.addCatalogItem(list)
+                    db.addCatalogItem(list)*/
 
                 }) {
                 Text(text = "Добавить")

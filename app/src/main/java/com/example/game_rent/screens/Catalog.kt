@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,12 +32,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.game_rent.data.DatabaseInteraction
 import com.example.game_rent.data_classes.CatalogItem
 import com.example.game_rent.navigation.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Catalog(navController: NavHostController) {
+
 
     var searchText by remember { mutableStateOf("") }
 
@@ -55,14 +58,13 @@ fun Catalog(navController: NavHostController) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = null)
             })
 
-       val list= mutableListOf<CatalogItem>(
-           CatalogItem("God of War", 30.0),
-           CatalogItem("Call of Duty", 70.0),
-           CatalogItem("Cyberpunk", 100.0),
-           CatalogItem("GTA 6", 130.0),
-           CatalogItem("WoT: Blitz", 15.0), CatalogItem("God of War", 30.0),
-           CatalogItem("Cyberpunk", 100.0))//DatabaseInteraction().getCatalog()
+        val di = DatabaseInteraction()
+        var list by remember { mutableStateOf<List<CatalogItem>>(emptyList()) }
 
+        LaunchedEffect(Unit) {
+            val items = di.getCatalog()
+            list = items
+        }
 
 
         LazyColumn(
