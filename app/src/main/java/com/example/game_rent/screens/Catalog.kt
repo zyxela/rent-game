@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.game_rent.data.DatabaseInteraction
 import com.example.game_rent.data_classes.CatalogItem
+import com.example.game_rent.data_classes.Order
 import com.example.game_rent.navigation.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,8 +63,7 @@ fun Catalog(navController: NavHostController) {
         var list by remember { mutableStateOf<List<CatalogItem>>(emptyList()) }
 
         LaunchedEffect(Unit) {
-            val items = di.getCatalog()
-            list = items
+            list = di.getCatalog()
         }
 
 
@@ -89,7 +89,7 @@ fun Catalog(navController: NavHostController) {
                     ) {
                         Button(
                             onClick = {
-
+                                      di.addOrder(Order("ул. Пушкина", list[index].name, "Пользователь", list[index].price))
                             },
                             modifier = Modifier.width(65.dp),
                             colors = ButtonDefaults.buttonColors(

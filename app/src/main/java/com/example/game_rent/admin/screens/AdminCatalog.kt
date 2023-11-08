@@ -11,18 +11,31 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.game_rent.data.DatabaseInteraction
 import com.example.game_rent.data_classes.CatalogItem
 import com.example.game_rent.navigation.AdminBottomNavigationBar
 
 @Composable
 fun AdminCatalog(navController: NavHostController) {
-    val list = mutableListOf<CatalogItem>(
-    )
+
+    val di = DatabaseInteraction()
+    var catalogList by remember { mutableStateOf<List<CatalogItem>>(emptyList()) }
+
+    LaunchedEffect(Unit){
+        catalogList = di.getCatalog()
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,12 +47,12 @@ fun AdminCatalog(navController: NavHostController) {
                 .height(660.dp)
         ) {
 
-            items(list.count()) { index ->
+            items(catalogList.count()) { index ->
                 Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 7.dp)) {
                     Column {
-                        Text(text = list[index].name, fontSize = 22.sp)
+                        Text(text = catalogList[index].name, fontSize = 22.sp)
                         Text(
-                            text = "${list[index].price}",
+                            text = "${catalogList[index].price}",
                             fontSize = 26.sp,
                             fontWeight = FontWeight(600)
                         )
@@ -61,26 +74,15 @@ fun AdminCatalog(navController: NavHostController) {
                 .fillMaxWidth()
                 .padding(4.dp),
                 onClick = {
-                    /*val list = mutableListOf<CatalogItem>(
+                    val list = mutableListOf<CatalogItem>(
                         CatalogItem("God of War", 30.0),
                         CatalogItem("Call of Duty", 70.0),
                         CatalogItem("Cyberpunk", 100.0),
                         CatalogItem("GTA 6", 130.0),
                         CatalogItem("WoT: Blitz", 15.0), CatalogItem("God of War", 30.0),
-                        CatalogItem("Cyberpunk", 100.0),
-                        CatalogItem("GTA 6", 130.0),
-                        CatalogItem("WoT: Blitz", 15.0),
-                        CatalogItem("God of War", 30.0),
-                        CatalogItem("Call of Duty", 70.0),
-                        CatalogItem("Cyberpunk", 100.0),
-                        CatalogItem("GTA 6", 130.0),
-                        CatalogItem("WoT: Blitz", 15.0),
-                        CatalogItem("God of War", 30.0),
-                        CatalogItem("Call of Duty", 70.0),
-                        CatalogItem("Cyberpunk", 100.0),
-                        CatalogItem("GTA 6", 130.0))
+                    )
                     val db = DatabaseInteraction()
-                    db.addCatalogItem(list)*/
+                    db.addCatalogItem(list)
 
                 }) {
                 Text(text = "Добавить")

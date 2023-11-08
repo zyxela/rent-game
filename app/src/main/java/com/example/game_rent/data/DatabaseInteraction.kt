@@ -2,6 +2,7 @@ package com.example.game_rent.data
 
 import android.util.Log
 import com.example.game_rent.data_classes.CatalogItem
+import com.example.game_rent.data_classes.Order
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
@@ -34,13 +35,13 @@ class DatabaseInteraction {
                         val item = CatalogItem(name, price)
                         list.add(item)
                     }
-                    Log.i("TAG", "${document.id} => ${document.data["price"]}; ${document.data["name"]}")
+
                 }
-                continuation.resume(list) // Возвращаем список после успешного выполнения
+                continuation.resume(list)
             }
             .addOnFailureListener { exception ->
-                Log.w("ERROr", "Error getting documents.", exception)
-                continuation.resume(list) // Возвращаем пустой список при ошибке
+                Log.e("ERROr", "Error getting documents.", exception)
+                continuation.resume(list)
             }
     }
 
@@ -55,6 +56,62 @@ class DatabaseInteraction {
                 .addOnFailureListener { e ->
                     Log.e("ADDED_ERROR", "${e.message}")
                 }
+
+    }
+
+    fun addOrder(item: Order) {
+        connect()
+
+        db.collection("orders")
+            .add(item)
+            .addOnSuccessListener {
+                Log.i("COMPLETE_ADDED", "Item successfully added")
+            }
+            .addOnFailureListener { e ->
+                Log.e("ADDED_ERROR", "${e.message}")
+            }
+    }
+
+    suspend fun getOrders(): MutableList<CatalogItem> = suspendCoroutine { continuation ->
+        val list: MutableList<CatalogItem> = mutableListOf()
+        connect()
+
+        db.collection("orders")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val name = document.data["game"].toString()
+                    if (name != "") {
+                        val price = document.data["price"].toString().toDouble()
+                        val item = CatalogItem(name, price)
+                        list.add(item)
+                    }
+
+                }
+                continuation.resume(list)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("ERROr", "Error getting documents.", exception)
+                continuation.resume(list)
+            }
+    }
+
+    fun addToListOrder(item: CatalogItem) {
+        connect()
+        db.collection("orderList")
+            .add(item)
+            .addOnSuccessListener {
+                Log.i("COMPLETE_ADDED", "Item successfully added")
+            }
+            .addOnFailureListener { e ->
+                Log.e("ADDED_ERROR", "${e.message}")
+            }
+
+
+    }
+    fun removeOrder(){
+        connect()
+        db.collection("orders")
 
     }
 }
