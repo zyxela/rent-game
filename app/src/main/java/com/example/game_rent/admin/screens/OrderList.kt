@@ -1,16 +1,107 @@
 package com.example.game_rent.admin.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.game_rent.data.DatabaseInteraction
+import com.example.game_rent.data_classes.Order
 import com.example.game_rent.navigation.AdminBottomNavigationBar
+import com.example.game_rent.navigation.Screen
 
 @Composable
 fun OrderList(navController: NavHostController) {
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
-        AdminBottomNavigationBar(navController)
+
+    var list by remember { mutableStateOf<MutableList<Order>>(mutableListOf()) }
+
+
+    val di = DatabaseInteraction()
+    LaunchedEffect(Unit) {
+        list = di.getOrderList()
+    }
+    var checks = MutableList<Boolean>(list.count()) { false }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+
+        LazyColumn(modifier = Modifier.height(680.dp)) {
+            items(list.count()) { index ->
+                val isChecked =
+                    remember { mutableStateOf(false) }
+
+                LaunchedEffect(isChecked.value) {
+                    isChecked.value = isChecked.value
+                }
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Row {
+                        Checkbox(
+                            checked = isChecked.value,
+                            onCheckedChange = {
+                                isChecked.value = it
+                                checks[index] = isChecked.value
+                            }
+                        )
+                        Column {
+                            Text(text = list[index].address)
+                            Text(text = list[index].userName)
+                            Text(text = list[index].game)
+                            Text(text = list[index].price.toString())
+
+                        }
+
+                    }
+                }
+            }
+        }
+
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(0.dp), verticalArrangement = Arrangement.Bottom
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp, 0.dp, 10.dp, 0.dp), verticalArrangement = Arrangement.Bottom
+            ) {
+                Button(modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        for (i in list.indices) {
+                            if (checks[i]) {
+
+                                di.removeFromOrderList(list[i].id)
+                                navController.navigate(Screen.MyCartScreen.route)
+                            }
+                        }
+
+                    }) {
+                    Text("Выполнить заказ")
+                }
+            }
+
+            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
+                AdminBottomNavigationBar(navController)
+            }
+        }
     }
 }

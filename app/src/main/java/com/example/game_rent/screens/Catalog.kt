@@ -65,7 +65,13 @@ fun Catalog(navController: NavHostController) {
         LaunchedEffect(Unit) {
             list = di.getCatalog()
         }
-
+        val filteredList:List<CatalogItem> = if (searchText != "") {
+            remember(searchText) {
+                list.filter { it.name.contains(searchText, ignoreCase = true) }
+            }
+        }else{
+            list
+        }
 
         LazyColumn(
             modifier = Modifier
@@ -73,12 +79,12 @@ fun Catalog(navController: NavHostController) {
                 .height(660.dp)
         ) {
 
-            items(list.count()) { index ->
+            items(filteredList.count()) { index ->
                 Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 7.dp)) {
                     Column {
-                        Text(text = list[index].name, fontSize = 22.sp)
+                        Text(text = filteredList[index].name, fontSize = 22.sp)
                         Text(
-                            text = "${list[index].price}",
+                            text = "${filteredList[index].price}",
                             fontSize = 26.sp,
                             fontWeight = FontWeight(600)
                         )

@@ -96,6 +96,33 @@ class DatabaseInteraction {
             }
     }
 
+
+    suspend fun getOrderList(): MutableList<Order> = suspendCoroutine { continuation ->
+        val list: MutableList<Order> = mutableListOf()
+        connect()
+
+        db.collection("orderList")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val game = document.data["game"].toString()
+                    if (game != "") {
+                        val id = document.id
+                        val price = document.data["price"].toString().toDouble()
+                        val address = document.data["price"].toString()
+                        val userName = document.data["userName"].toString()
+                        val item = Order(id,address,  game, userName , price)
+                        list.add(item)
+                    }
+
+                }
+                continuation.resume(list)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("ERROr", "Error getting documents.", exception)
+                continuation.resume(list)
+            }
+    }
     fun addToListOrder(item: Order) {
         connect()
         db.collection("orderList")
@@ -109,7 +136,8 @@ class DatabaseInteraction {
 
 
     }
-    fun removeOrder(itemId:String){
+
+    fun removeOrder(itemId: String) {
         connect()
         db.collection("orders")
             .document(itemId)
@@ -121,4 +149,18 @@ class DatabaseInteraction {
                 // Ошибка при удалении
             }
     }
+
+    fun removeFromOrderList(itemId: String){
+        connect()
+        db.collection("orderList")
+            .document(itemId)
+            .delete()
+            .addOnSuccessListener {
+                // Успешно удалено
+            }
+            .addOnFailureListener { e ->
+                // Ошибка при удалении
+            }
+    }
+
 }
