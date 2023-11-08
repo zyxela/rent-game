@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import com.example.game_rent.data.DatabaseInteraction
 import com.example.game_rent.data_classes.CatalogItem
 import com.example.game_rent.navigation.BottomNavigationBar
+import com.example.game_rent.navigation.Screen
 
 @Composable
 fun MyCart(navController: NavHostController) {
@@ -86,13 +87,11 @@ fun MyCart(navController: NavHostController) {
                         for (i in list.indices) {
                             if (checks[i]) {
                                 di.addToListOrder(list[i])
+                                di.removeOrder(list[i].id)
+                                navController.navigate(Screen.MyCartScreen.route)
                             }
                         }
-                        for (i in list.indices) {
-                            if (checks[i]) {
 
-                            }
-                        }
                     }) {
                     Text("Оформить заказ")
                 }

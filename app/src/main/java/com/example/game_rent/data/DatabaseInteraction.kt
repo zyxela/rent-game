@@ -32,7 +32,7 @@ class DatabaseInteraction {
                     val name = document.data["name"].toString()
                     if (name != "") {
                         val price = document.data["price"].toString().toDouble()
-                        val item = CatalogItem(name, price)
+                        val item = CatalogItem(document.id, name, price)
                         list.add(item)
                     }
 
@@ -83,7 +83,7 @@ class DatabaseInteraction {
                     val name = document.data["game"].toString()
                     if (name != "") {
                         val price = document.data["price"].toString().toDouble()
-                        val item = CatalogItem(name, price)
+                        val item = CatalogItem(document.id, name, price)
                         list.add(item)
                     }
 
@@ -109,9 +109,16 @@ class DatabaseInteraction {
 
 
     }
-    fun removeOrder(){
+    fun removeOrder(itemId:String){
         connect()
         db.collection("orders")
-
+            .document(itemId)
+            .delete()
+            .addOnSuccessListener {
+                // Успешно удалено
+            }
+            .addOnFailureListener { e ->
+                // Ошибка при удалении
+            }
     }
 }
