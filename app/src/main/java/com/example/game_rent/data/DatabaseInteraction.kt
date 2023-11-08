@@ -96,7 +96,7 @@ class DatabaseInteraction {
             }
     }
 
-    fun addToListOrder(item: CatalogItem) {
+    fun addToListOrder(item: Order) {
         connect()
         db.collection("orderList")
             .add(item)

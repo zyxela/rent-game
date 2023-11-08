@@ -1,5 +1,6 @@
 package com.example.game_rent.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,10 +20,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.game_rent.data.DatabaseInteraction
 import com.example.game_rent.data_classes.CatalogItem
+import com.example.game_rent.data_classes.Order
 import com.example.game_rent.navigation.BottomNavigationBar
 import com.example.game_rent.navigation.Screen
 
@@ -70,7 +73,8 @@ fun MyCart(navController: NavHostController) {
                 }
             }
         }
-
+        val context = LocalContext.current
+        val sharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
         Column(
             modifier = Modifier
@@ -86,9 +90,17 @@ fun MyCart(navController: NavHostController) {
                     onClick = {
                         for (i in list.indices) {
                             if (checks[i]) {
-                                di.addToListOrder(list[i])
-                                di.removeOrder(list[i].id)
-                                navController.navigate(Screen.MyCartScreen.route)
+                                di.addToListOrder(
+                                    Order(
+                                        sharedPreferences.getString("address", "")
+                                            ?: "groove street",
+                                        list[i].name,
+                                        sharedPreferences.getString("userName", "") ?: "Customer",
+                                        list[i].price
+                                    )
+                                )
+                                di.removeOrder (list[i].id)
+                                navController . navigate (Screen.MyCartScreen.route)
                             }
                         }
 
