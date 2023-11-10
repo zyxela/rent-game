@@ -45,17 +45,16 @@ class DatabaseInteraction {
             }
     }
 
-    fun addCatalogItem(list: List<CatalogItem>) {
+    fun addCatalogItem(item: CatalogItem) {
         connect()
-        for (item in list)
-            db.collection("catalog")
-                .add(item)
-                .addOnSuccessListener {
-                    Log.i("COMPLETE_ADDED", "Item successfully added")
-                }
-                .addOnFailureListener { e ->
-                    Log.e("ADDED_ERROR", "${e.message}")
-                }
+        db.collection("catalog")
+            .add(item)
+            .addOnSuccessListener {
+                Log.i("COMPLETE_ADDED", "Item successfully added")
+            }
+            .addOnFailureListener { e ->
+                Log.e("ADDED_ERROR", "${e.message}")
+            }
 
     }
 
@@ -111,7 +110,7 @@ class DatabaseInteraction {
                         val price = document.data["price"].toString().toDouble()
                         val address = document.data["price"].toString()
                         val userName = document.data["userName"].toString()
-                        val item = Order(id,address,  game, userName , price)
+                        val item = Order(id, address, game, userName, price)
                         list.add(item)
                     }
 
@@ -123,6 +122,7 @@ class DatabaseInteraction {
                 continuation.resume(list)
             }
     }
+
     fun addToListOrder(item: Order) {
         connect()
         db.collection("orderList")
@@ -150,7 +150,7 @@ class DatabaseInteraction {
             }
     }
 
-    fun removeFromOrderList(itemId: String){
+    fun removeFromOrderList(itemId: String) {
         connect()
         db.collection("orderList")
             .document(itemId)
@@ -160,6 +160,30 @@ class DatabaseInteraction {
             }
             .addOnFailureListener { e ->
                 // Ошибка при удалении
+            }
+    }
+
+    fun addToExecutedOrders(item: Order){
+        connect()
+        db.collection("executedOrders")
+            .add(item)
+            .addOnSuccessListener {
+                Log.i("COMPLETE_ADDED", "Item successfully added")
+            }
+            .addOnFailureListener { e ->
+                Log.e("ADDED_ERROR", "${e.message}")
+            }
+    }
+
+    fun addToDeniedOrders(item: Order){
+        connect()
+        db.collection("deniedOrders")
+            .add(item)
+            .addOnSuccessListener {
+                Log.i("COMPLETE_ADDED", "Item successfully added")
+            }
+            .addOnFailureListener { e ->
+                Log.e("ADDED_ERROR", "${e.message}")
             }
     }
 

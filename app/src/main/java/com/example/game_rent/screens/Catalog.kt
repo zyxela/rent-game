@@ -1,5 +1,6 @@
 package com.example.game_rent.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.game_rent.components.ShowItemDialog
 import com.example.game_rent.data.DatabaseInteraction
 import com.example.game_rent.data_classes.CatalogItem
 import com.example.game_rent.data_classes.Order
@@ -40,7 +42,6 @@ import com.example.game_rent.navigation.BottomNavigationBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Catalog(navController: NavHostController) {
-
 
     var searchText by remember { mutableStateOf("") }
 
@@ -65,12 +66,24 @@ fun Catalog(navController: NavHostController) {
         LaunchedEffect(Unit) {
             list = di.getCatalog()
         }
-        val filteredList:List<CatalogItem> = if (searchText != "") {
+        val filteredList: List<CatalogItem> = if (searchText != "") {
             remember(searchText) {
                 list.filter { it.name.contains(searchText, ignoreCase = true) }
             }
-        }else{
+        } else {
             list
+        }
+
+        var showDialog by remember {
+            mutableStateOf(false)
+        }
+        var showenItem by remember {
+            mutableStateOf(CatalogItem("",0.0))
+        }
+        if (showDialog) {
+            ShowItemDialog(item = showenItem, onDismissRequest = {
+                showDialog = false
+            })
         }
 
         LazyColumn(
@@ -80,7 +93,14 @@ fun Catalog(navController: NavHostController) {
         ) {
 
             items(filteredList.count()) { index ->
-                Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 7.dp)) {
+                Row(modifier = Modifier
+                    .padding(0.dp, 0.dp, 0.dp, 7.dp)
+                    .clickable(onClick = {
+                        showenItem.name = filteredList[index].name
+                        showenItem.price = filteredList[index].price
+                        showDialog = true
+                    })
+                ) {
                     Column {
                         Text(text = filteredList[index].name, fontSize = 22.sp)
                         Text(
@@ -95,7 +115,14 @@ fun Catalog(navController: NavHostController) {
                     ) {
                         Button(
                             onClick = {
-                                      di.addOrder(Order("ул. Пушкина", list[index].name, "Пользователь", list[index].price))
+                                di.addOrder(
+                                    Order(
+                                        "ул. Пушкина",
+                                        list[index].name,
+                                        "Пользователь",
+                                        list[index].price
+                                    )
+                                )
                             },
                             modifier = Modifier.width(65.dp),
                             colors = ButtonDefaults.buttonColors(

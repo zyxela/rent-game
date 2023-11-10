@@ -1,10 +1,10 @@
 package com.example.game_rent.data_classes
 
 data class Order(
-    val address: String,
-    val game: String,
-    val userName: String,
-    val price: Double,
+    var address: String,
+    var game: String,
+    var userName: String,
+    var price: Double,
 ) {
     var id: String = ""
 
@@ -17,4 +17,6 @@ data class Order(
     ) : this(address, game, userName, price) {
         this.id = id
     }
+
+
 }

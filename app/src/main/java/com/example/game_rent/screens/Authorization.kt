@@ -25,7 +25,7 @@ import com.example.game_rent.navigation.Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Authorization(navController: NavController) {
-    val admin = User("a", "a")
+    val admin = User("a", "")
     var click by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
