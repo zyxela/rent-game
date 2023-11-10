@@ -187,4 +187,56 @@ class DatabaseInteraction {
             }
     }
 
+    suspend fun getExecuteOrder(): MutableList<Order> = suspendCoroutine { continuation ->
+        val list: MutableList<Order> = mutableListOf()
+        connect()
+
+        db.collection("executedOrders")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val game = document.data["game"].toString()
+                    if (game != "") {
+                        val id = document.id
+                        val price = document.data["price"].toString().toDouble()
+                        val address = document.data["price"].toString()
+                        val userName = document.data["userName"].toString()
+                        val item = Order(id, address, game, userName, price)
+                        list.add(item)
+                    }
+
+                }
+                continuation.resume(list)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("ERROr", "Error getting documents.", exception)
+                continuation.resume(list)
+            }
+    }
+    suspend fun getDeniedOrder(): MutableList<Order> = suspendCoroutine { continuation ->
+        val list: MutableList<Order> = mutableListOf()
+        connect()
+
+        db.collection("deniedOrders")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val game = document.data["game"].toString()
+                    if (game != "") {
+                        val id = document.id
+                        val price = document.data["price"].toString().toDouble()
+                        val address = document.data["price"].toString()
+                        val userName = document.data["userName"].toString()
+                        val item = Order(id, address, game, userName, price)
+                        list.add(item)
+                    }
+
+                }
+                continuation.resume(list)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("ERROr", "Error getting documents.", exception)
+                continuation.resume(list)
+            }
+    }
 }

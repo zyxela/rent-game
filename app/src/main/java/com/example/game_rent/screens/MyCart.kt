@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.game_rent.components.ShowHistoryDialog
 import com.example.game_rent.data.DatabaseInteraction
 import com.example.game_rent.data_classes.CatalogItem
 import com.example.game_rent.data_classes.Order
@@ -38,12 +39,26 @@ fun MyCart(navController: NavHostController) {
 
     var list by remember { mutableStateOf<MutableList<CatalogItem>>(mutableListOf()) }
 
+    var executeList by remember { mutableStateOf<MutableList<Order>>(mutableListOf()) }
+    var deniedList by remember { mutableStateOf<MutableList<Order>>(mutableListOf()) }
+
+    var history by remember {
+        mutableStateOf(false)
+    }
 
     val di = DatabaseInteraction()
     LaunchedEffect(Unit) {
         list = di.getOrders()
+        executeList = di.getExecuteOrder()
+        deniedList = di.getDeniedOrder()
     }
     var checks = MutableList<Boolean>(list.count()) { false }
+
+    if (history) {
+        ShowHistoryDialog(executedList = executeList, deniedList = deniedList) {
+            history = false
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -93,7 +108,7 @@ fun MyCart(navController: NavHostController) {
                 Column(horizontalAlignment = Alignment.End) {
                     Button(
                         onClick = {
-
+                            history = true
                         }) {
                         Icon(imageVector = Icons.Filled.History, contentDescription = "")
                     }
@@ -112,7 +127,7 @@ fun MyCart(navController: NavHostController) {
                                         list[i].price
                                     )
                                 )
-                                navController . navigate (Screen.MyCartScreen.route)
+                                navController.navigate(Screen.MyCartScreen.route)
                             }
                         }
 

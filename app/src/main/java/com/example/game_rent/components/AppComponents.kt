@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -249,8 +250,12 @@ fun ShowItemDialog(item: CatalogItem, onDismissRequest: () -> Unit) {
 }
 
 @Composable
-fun historyItem(){
-    Row() {
+fun historyItem(item:Order, color:Color){
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Card (modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = color)){
+            Text(item.game)
+            Text(text = item.price.toString())
+        }
 
     }
 }
@@ -270,11 +275,12 @@ fun ShowHistoryDialog(
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
-            LazyColumn {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(executedList.count()) { index ->
-
+                    historyItem(item = executedList[index], color = Color.Green)
                 }
                 items(deniedList.count()) { index ->
+                    historyItem(item = deniedList[index], color = Color.Red)
 
                 }
 
