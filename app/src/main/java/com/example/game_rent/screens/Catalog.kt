@@ -1,5 +1,8 @@
 package com.example.game_rent.screens
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,11 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -29,15 +34,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
-import com.example.game_rent.components.ShowItemDialog
 import com.example.game_rent.data.DatabaseInteraction
 import com.example.game_rent.data_classes.CatalogItem
 import com.example.game_rent.data_classes.Order
 import com.example.game_rent.navigation.BottomNavigationBar
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +71,9 @@ fun Catalog(navController: NavHostController) {
 
         val di = DatabaseInteraction()
         var list by remember { mutableStateOf<List<CatalogItem>>(emptyList()) }
+        var image by remember {
+            mutableStateOf<Bitmap?>(null)
+        }
 
         LaunchedEffect(Unit) {
             list = di.getCatalog()
@@ -78,12 +90,39 @@ fun Catalog(navController: NavHostController) {
             mutableStateOf(false)
         }
         var showenItem by remember {
-            mutableStateOf(CatalogItem("",0.0))
+            mutableStateOf(CatalogItem("", 0.0, ""))
         }
         if (showDialog) {
-            ShowItemDialog(item = showenItem, onDismissRequest = {
-                showDialog = false
-            })
+            LaunchedEffect(Unit) {
+                //image = di.getImage("gta6.jpg")
+                val ref = Firebase.storage.reference.child("images/gta6.jpg")
+                val localFile = File.createTempFile("images", "jpg")
+                 ref.getFile(localFile).addOnSuccessListener {
+                     image = BitmapFactory.decodeFile(localFile.absolutePath)
+                }.addOnFailureListener {
+                    // Handle any errors
+                }
+            }
+            if (showDialog) {
+                Dialog(onDismissRequest = { showDialog = false }) {
+                    Card(
+                        modifier = Modifier
+                            .height(567.dp)
+                            .padding(16.dp),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column {
+                            if (image != null) {
+                                Image(bitmap = image!!.asImageBitmap(), contentDescription = "")
+                            }
+                            Text(text = showenItem.name)
+                            Text(text = showenItem.price.toString())
+                            Text(text = showenItem.name)
+
+                        }
+                    }
+                }
+            }
         }
 
         LazyColumn(
@@ -93,13 +132,14 @@ fun Catalog(navController: NavHostController) {
         ) {
 
             items(filteredList.count()) { index ->
-                Row(modifier = Modifier
-                    .padding(0.dp, 0.dp, 0.dp, 7.dp)
-                    .clickable(onClick = {
-                        showenItem.name = filteredList[index].name
-                        showenItem.price = filteredList[index].price
-                        showDialog = true
-                    })
+                Row(
+                    modifier = Modifier
+                        .padding(0.dp, 0.dp, 0.dp, 7.dp)
+                        .clickable(onClick = {
+                            showenItem.name = filteredList[index].name
+                            showenItem.price = filteredList[index].price
+                            showDialog = true
+                        })
                 ) {
                     Column {
                         Text(text = filteredList[index].name, fontSize = 22.sp)

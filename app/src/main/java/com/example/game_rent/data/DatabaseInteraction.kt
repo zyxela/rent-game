@@ -1,11 +1,15 @@
 package com.example.game_rent.data
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import com.example.game_rent.data_classes.CatalogItem
 import com.example.game_rent.data_classes.Order
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.storage
+import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -30,9 +34,10 @@ class DatabaseInteraction {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val name = document.data["name"].toString()
+                    val description = document.data["description"].toString()
                     if (name != "") {
                         val price = document.data["price"].toString().toDouble()
-                        val item = CatalogItem(document.id, name, price)
+                        val item = CatalogItem(document.id, name, price, description)
                         list.add(item)
                     }
 
@@ -80,9 +85,10 @@ class DatabaseInteraction {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val name = document.data["game"].toString()
+                    val description = document.data["description"].toString()
                     if (name != "") {
                         val price = document.data["price"].toString().toDouble()
-                        val item = CatalogItem(document.id, name, price)
+                        val item = CatalogItem(document.id, name, price, description)
                         list.add(item)
                     }
 
@@ -163,7 +169,7 @@ class DatabaseInteraction {
             }
     }
 
-    fun addToExecutedOrders(item: Order){
+    fun addToExecutedOrders(item: Order) {
         connect()
         db.collection("executedOrders")
             .add(item)
@@ -175,7 +181,7 @@ class DatabaseInteraction {
             }
     }
 
-    fun addToDeniedOrders(item: Order){
+    fun addToDeniedOrders(item: Order) {
         connect()
         db.collection("deniedOrders")
             .add(item)
@@ -213,6 +219,7 @@ class DatabaseInteraction {
                 continuation.resume(list)
             }
     }
+
     suspend fun getDeniedOrder(): MutableList<Order> = suspendCoroutine { continuation ->
         val list: MutableList<Order> = mutableListOf()
         connect()
@@ -238,5 +245,21 @@ class DatabaseInteraction {
                 Log.e("ERROr", "Error getting documents.", exception)
                 continuation.resume(list)
             }
+    }
+
+    suspend fun getImage(id: String): Bitmap? = suspendCoroutine { continuation ->
+        val storage = Firebase.storage.getReference("images/$id")
+        val file = File.createTempFile("sampleasd", "jpg")
+        var b: Bitmap? = null
+        storage.getFile(file)
+            .addOnSuccessListener {
+                b = BitmapFactory.decodeFile(file.absolutePath)
+                continuation.resume(b)
+            }
+            .addOnFailureListener {
+
+            }
+        continuation.resume(b)
+
     }
 }
