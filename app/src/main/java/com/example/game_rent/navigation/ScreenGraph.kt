@@ -26,7 +26,7 @@ fun ScreenGraph() {
         composable(Screen.AdminCatalogScreen.route) {
             AdminCatalog(navController = navController)
         }
-        composable(Screen.Authorization.route){
+        composable(Screen.Authorization.route) {
             Authorization(navController = navController)
         }
 

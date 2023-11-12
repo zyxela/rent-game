@@ -123,11 +123,13 @@ fun CentralButton(text: String, onClick: () -> Unit) {
 }
 
 
-
 @Composable
-fun historyItem(item:Order, color:Color){
+fun historyItem(item: Order, color: Color) {
     Row(modifier = Modifier.fillMaxWidth()) {
-        Card (modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = color)){
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = color)
+        ) {
             Text(item.game)
             Text(text = item.price.toString())
         }

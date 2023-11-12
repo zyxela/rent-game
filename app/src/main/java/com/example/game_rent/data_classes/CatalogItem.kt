@@ -6,11 +6,12 @@ data class CatalogItem(
     var description: String,
 ) {
     var id: String = ""
+
     constructor(
         id: String,
         name: String,
         price: Double,
-        description: String
+        description: String,
     ) : this(name, price, description) {
         this.id = id
     }

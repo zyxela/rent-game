@@ -60,7 +60,7 @@ fun MyCart(navController: NavHostController) {
         executedList = di.getExecuteOrder()
         deniedList = di.getDeniedOrder()
     }
-    var checks = MutableList<Boolean>(list.count()) { false }
+    val checks = MutableList(list.count()) { false }
 
     if (history) {
         Dialog(onDismissRequest = { history = false }) {
@@ -97,12 +97,13 @@ fun MyCart(navController: NavHostController) {
             horizontalAlignment = Alignment.End
         ) {
 
-            Icon(modifier = Modifier
-                .size(48.dp)
-                .clickable {
-                    history = true
+            Icon(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clickable {
+                        history = true
 
-                }, imageVector = Icons.Filled.History, contentDescription = ""
+                    }, imageVector = Icons.Filled.History, contentDescription = ""
             )
 
         }
@@ -114,9 +115,11 @@ fun MyCart(navController: NavHostController) {
                 LaunchedEffect(isChecked.value) {
                     isChecked.value = isChecked.value
                 }
-                Card(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp)) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp)
+                ) {
                     Row {
                         Checkbox(
                             checked = isChecked.value,

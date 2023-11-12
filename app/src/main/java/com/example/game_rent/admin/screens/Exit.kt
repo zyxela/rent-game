@@ -21,7 +21,7 @@ import com.example.game_rent.navigation.Screen
 
 @Composable
 fun Exit(navController: NavHostController) {
-    var click = remember {
+    val click = remember {
         mutableStateOf(false)
     }
     Column(
@@ -48,7 +48,7 @@ fun Exit(navController: NavHostController) {
     }
 
 
-    if (click.value){
+    if (click.value) {
         navController.navigate(Screen.Authorization.route)
     }
 }

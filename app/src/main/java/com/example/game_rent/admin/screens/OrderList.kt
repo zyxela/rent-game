@@ -42,7 +42,7 @@ fun OrderList(navController: NavHostController) {
     LaunchedEffect(Unit) {
         list = di.getOrderList()
     }
-    var checks = MutableList<Boolean>(list.count()) { false }
+    var checks = MutableList(list.count()) { false }
 
     Column(
         modifier = Modifier
@@ -58,7 +58,9 @@ fun OrderList(navController: NavHostController) {
                     isChecked.value = isChecked.value
                 }
                 Card(
-                    modifier = Modifier.fillMaxWidth().padding(4.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = Color(238, 238, 238))
                 ) {

@@ -12,13 +12,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -40,6 +46,7 @@ import androidx.navigation.NavHostController
 import com.example.game_rent.data.DatabaseInteraction
 import com.example.game_rent.data_classes.CatalogItem
 import com.example.game_rent.navigation.AdminBottomNavigationBar
+import com.example.game_rent.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState")
@@ -55,8 +62,7 @@ fun AdminCatalog(navController: NavHostController) {
 
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
 
         LazyColumn(
@@ -86,6 +92,30 @@ fun AdminCatalog(navController: NavHostController) {
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight(600)
                             )
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.End,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Button(
+                                    onClick = {
+                                        di.removeOrder(catalogList[index].id)
+                                        navController.navigate(Screen.AdminCatalogScreen.route)
+                                    },
+                                    modifier = Modifier.size(70.dp),
+                                    shape = CircleShape,
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color(255, 105, 105)
+                                    )
+                                ) {
+
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = "",
+                                        modifier = Modifier.size(28.dp)
+                                    )
+                                }
+                            }
                         }
                     }
 
@@ -108,12 +138,11 @@ fun AdminCatalog(navController: NavHostController) {
             mutableStateOf<Uri?>(null)
         }
 
-        val singlePhotoPicker = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.PickVisualMedia(),
-            onResult = {
-                uri = it
-            }
-        )
+        val singlePhotoPicker =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia(),
+                onResult = {
+                    uri = it
+                })
         val context = LocalContext.current
         var showDialog by remember { mutableStateOf(false) }
         if (showDialog) {
@@ -121,15 +150,15 @@ fun AdminCatalog(navController: NavHostController) {
                 val db = DatabaseInteraction()
                 db.addCatalogItem(
                     CatalogItem(
-                        name,
-                        if (price != "") price.toDouble() else 0.0,
-                        description
+                        name, if (price != "") price.toDouble() else 0.0, description
                     )
                 )
                 uri?.let {
                     DatabaseInteraction.uploadToStorage(uri!!, context, name)
                 }
+
                 showDialog = false
+                navController.navigate(Screen.AdminCatalogScreen.route)
             }) {
 
                 Card(
@@ -140,8 +169,7 @@ fun AdminCatalog(navController: NavHostController) {
                     shape = RoundedCornerShape(16.dp),
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -151,43 +179,34 @@ fun AdminCatalog(navController: NavHostController) {
                             modifier = Modifier.padding(16.dp),
                         )
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            // horizontalArrangement = Arrangement.Center,
-                        ) {
-                            TextField(
-                                modifier = Modifier.padding(8.dp),
+                            modifier = Modifier.fillMaxWidth(),
+
+                            ) {
+                            TextField(modifier = Modifier.padding(8.dp),
                                 value = name,
                                 onValueChange = {
                                     name = it
-                                }
-                            )
-                            TextField(
-                                modifier = Modifier.padding(8.dp),
+                                })
+                            TextField(modifier = Modifier.padding(8.dp),
                                 value = price.toString(),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 onValueChange = {
                                     price = it
-                                }
-                            )
-                            TextField(
-                                modifier = Modifier.padding(8.dp),
-                                value = "Description",
+                                })
+                            TextField(modifier = Modifier.padding(8.dp),
+                                value = description,
                                 onValueChange = {
-
-                                }
-                            )
-
-
-                            Button(
-                                onClick = {
-                                    singlePhotoPicker.launch(
-                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                    )
+                                    description = it
+                                })
 
 
+                            Button(onClick = {
+                                singlePhotoPicker.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
 
-                                }) {
+
+                            }) {
                                 Text(text = "Добавить изображение")
                             }
 
@@ -200,15 +219,15 @@ fun AdminCatalog(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(0.dp)
-                .weight(2f), verticalArrangement = Arrangement.Bottom
+                .weight(2f),
+            verticalArrangement = Arrangement.Bottom
         ) {
             Button(modifier = Modifier
                 .fillMaxWidth()
-                .padding(4.dp),
-                onClick = {
-                    showDialog = true
+                .padding(4.dp), onClick = {
+                showDialog = true
 
-                }) {
+            }) {
                 Text(text = "Добавить")
             }
 

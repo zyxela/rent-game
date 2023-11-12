@@ -147,14 +147,14 @@ class DatabaseInteraction {
 
     fun removeOrder(itemId: String) {
         connect()
-        db.collection("orders")
+        db.collection("catalog")
             .document(itemId)
             .delete()
             .addOnSuccessListener {
-                // Успешно удалено
+                Log.i("SUCCESS", "Item deleted")
             }
             .addOnFailureListener { e ->
-                // Ошибка при удалении
+                Log.i("FAIL", "Item not deleted")
             }
     }
 
@@ -252,12 +252,11 @@ class DatabaseInteraction {
 
     companion object {
 
-        fun uploadToStorage(uri: Uri, context: Context, name:String) {
+        fun uploadToStorage(uri: Uri, context: Context, name: String) {
             val storage = Firebase.storage
 
             // Create a storage reference from our app
             var storageRef = storage.reference
-
 
 
             var spaceRef: StorageReference = storageRef.child("images/$name.jpg")
