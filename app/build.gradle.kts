@@ -75,4 +75,8 @@ dependencies {
     implementation("androidx.compose.material:material:1.5.4")
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
+    implementation("io.coil-kt:coil-compose:2.3.0")
+    implementation("com.google.firebase:firebase-storage-ktx")
+
 }

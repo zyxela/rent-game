@@ -1,19 +1,21 @@
 package com.example.game_rent.data
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import com.example.game_rent.data_classes.CatalogItem
 import com.example.game_rent.data_classes.Order
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
-import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class DatabaseInteraction {
+
     lateinit var db: FirebaseFirestore
     private fun connect() {
         try {
@@ -45,7 +47,7 @@ class DatabaseInteraction {
                 continuation.resume(list)
             }
             .addOnFailureListener { exception ->
-                Log.e("ERROr", "Error getting documents.", exception)
+                Log.e("ERROR", "Error getting documents.", exception)
                 continuation.resume(list)
             }
     }
@@ -114,7 +116,7 @@ class DatabaseInteraction {
                     if (game != "") {
                         val id = document.id
                         val price = document.data["price"].toString().toDouble()
-                        val address = document.data["price"].toString()
+                        val address = document.data["address"].toString()
                         val userName = document.data["userName"].toString()
                         val item = Order(id, address, game, userName, price)
                         list.add(item)
@@ -247,19 +249,46 @@ class DatabaseInteraction {
             }
     }
 
-    suspend fun getImage(id: String): Bitmap? = suspendCoroutine { continuation ->
-        val storage = Firebase.storage.getReference("images/$id")
-        val file = File.createTempFile("sampleasd", "jpg")
-        var b: Bitmap? = null
-        storage.getFile(file)
-            .addOnSuccessListener {
-                b = BitmapFactory.decodeFile(file.absolutePath)
-                continuation.resume(b)
-            }
-            .addOnFailureListener {
 
-            }
-        continuation.resume(b)
+    companion object {
 
+        fun uploadToStorage(uri: Uri, context: Context, name:String) {
+            val storage = Firebase.storage
+
+            // Create a storage reference from our app
+            var storageRef = storage.reference
+
+
+
+            var spaceRef: StorageReference = storageRef.child("images/$name.jpg")
+
+
+            val byteArray: ByteArray? = context.contentResolver
+                .openInputStream(uri)
+                ?.use { it.readBytes() }
+
+            byteArray?.let {
+
+                var uploadTask = spaceRef.putBytes(byteArray)
+                uploadTask.addOnFailureListener {
+                    Toast.makeText(
+                        context,
+                        "upload failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    // Handle unsuccessful uploads
+                }.addOnSuccessListener { taskSnapshot ->
+                    // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+                    // ...
+                    Toast.makeText(
+                        context,
+                        "upload successed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+
+        }
     }
 }

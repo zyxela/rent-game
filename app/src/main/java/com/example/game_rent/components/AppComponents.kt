@@ -121,6 +121,9 @@ fun CentralButton(text: String, onClick: () -> Unit) {
         )
     }
 }
+
+
+
 @Composable
 fun historyItem(item:Order, color:Color){
     Row(modifier = Modifier.fillMaxWidth()) {

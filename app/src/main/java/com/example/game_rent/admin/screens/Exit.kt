@@ -29,7 +29,7 @@ fun Exit(navController: NavHostController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Вы являетесь\nАдминистратором", fontSize = 48.sp)
+        Text(text = "Вы являетесь\nАдминистратором", fontSize = 36.sp)
     }
 
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {

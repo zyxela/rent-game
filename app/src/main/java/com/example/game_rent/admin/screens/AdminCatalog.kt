@@ -1,6 +1,10 @@
 package com.example.game_rent.admin.screens
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -24,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -61,12 +68,25 @@ fun AdminCatalog(navController: NavHostController) {
             items(catalogList.count()) { index ->
                 Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 7.dp)) {
                     Column {
-                        Text(text = catalogList[index].name, fontSize = 22.sp)
-                        Text(
-                            text = "${catalogList[index].price}",
-                            fontSize = 26.sp,
-                            fontWeight = FontWeight(600)
-                        )
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(238, 238, 238))
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(8.dp),
+                                text = catalogList[index].name,
+                                fontSize = 22.sp
+                            )
+                            Text(
+                                modifier = Modifier.padding(8.dp),
+                                text = "${catalogList[index].price}",
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight(600)
+                            )
+                        }
                     }
 
                 }
@@ -84,11 +104,31 @@ fun AdminCatalog(navController: NavHostController) {
             mutableStateOf("")
         }
 
+        var uri by remember {
+            mutableStateOf<Uri?>(null)
+        }
+
+        val singlePhotoPicker = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = {
+                uri = it
+            }
+        )
+        val context = LocalContext.current
         var showDialog by remember { mutableStateOf(false) }
         if (showDialog) {
             Dialog(onDismissRequest = {
                 val db = DatabaseInteraction()
-                db.addCatalogItem(CatalogItem(name, if (price != "") price.toDouble() else 0.0, description))
+                db.addCatalogItem(
+                    CatalogItem(
+                        name,
+                        if (price != "") price.toDouble() else 0.0,
+                        description
+                    )
+                )
+                uri?.let {
+                    DatabaseInteraction.uploadToStorage(uri!!, context, name)
+                }
                 showDialog = false
             }) {
 
@@ -137,6 +177,20 @@ fun AdminCatalog(navController: NavHostController) {
 
                                 }
                             )
+
+
+                            Button(
+                                onClick = {
+                                    singlePhotoPicker.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                    )
+
+
+
+                                }) {
+                                Text(text = "Добавить изображение")
+                            }
+
                         }
                     }
                 }
@@ -152,7 +206,6 @@ fun AdminCatalog(navController: NavHostController) {
                 .fillMaxWidth()
                 .padding(4.dp),
                 onClick = {
-
                     showDialog = true
 
                 }) {

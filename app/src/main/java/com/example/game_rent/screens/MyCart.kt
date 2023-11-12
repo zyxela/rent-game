@@ -1,19 +1,21 @@
 package com.example.game_rent.screens
 
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
@@ -28,7 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.game_rent.components.historyItem
@@ -86,13 +90,21 @@ fun MyCart(navController: NavHostController) {
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
-            Button(
-                onClick = {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            horizontalAlignment = Alignment.End
+        ) {
+
+            Icon(modifier = Modifier
+                .size(48.dp)
+                .clickable {
                     history = true
-                }) {
-                Icon(imageVector = Icons.Filled.History, contentDescription = "")
-            }
+
+                }, imageVector = Icons.Filled.History, contentDescription = ""
+            )
+
         }
         LazyColumn(modifier = Modifier.height(610.dp)) {
             items(list.count()) { index ->
@@ -102,7 +114,9 @@ fun MyCart(navController: NavHostController) {
                 LaunchedEffect(isChecked.value) {
                     isChecked.value = isChecked.value
                 }
-                Box(modifier = Modifier.fillMaxWidth()) {
+                Card(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp)) {
                     Row {
                         Checkbox(
                             checked = isChecked.value,
@@ -112,8 +126,16 @@ fun MyCart(navController: NavHostController) {
                             }
                         )
                         Column {
-                            Text(text = list[index].name)
-                            Text(text = list[index].price.toString())
+                            Text(
+                                text = list[index].name,
+                                fontWeight = FontWeight(550),
+                                fontSize = 22.sp
+                            )
+                            Text(
+                                text = list[index].price.toString(),
+                                fontWeight = FontWeight(500),
+                                fontSize = 18.sp
+                            )
 
                         }
 
@@ -137,6 +159,7 @@ fun MyCart(navController: NavHostController) {
 
 
                 Button(modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(166, 207, 152)),
                     onClick = {
                         for (i in list.indices) {
                             if (checks[i]) {

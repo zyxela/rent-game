@@ -4,7 +4,6 @@ data class CatalogItem(
     var name: String,
     var price: Double,
     var description: String,
-    var image:String = "gta6.jpg"
 ) {
     var id: String = ""
     constructor(

@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -94,11 +95,10 @@ fun Catalog(navController: NavHostController) {
         }
         if (showDialog) {
             LaunchedEffect(Unit) {
-                //image = di.getImage("gta6.jpg")
-                val ref = Firebase.storage.reference.child("images/gta6.jpg")
+                val ref = Firebase.storage.reference.child("images/${showenItem.name}.jpg")
                 val localFile = File.createTempFile("images", "jpg")
-                 ref.getFile(localFile).addOnSuccessListener {
-                     image = BitmapFactory.decodeFile(localFile.absolutePath)
+                ref.getFile(localFile).addOnSuccessListener {
+                    image = BitmapFactory.decodeFile(localFile.absolutePath)
                 }.addOnFailureListener {
                     // Handle any errors
                 }
@@ -117,7 +117,7 @@ fun Catalog(navController: NavHostController) {
                             }
                             Text(text = showenItem.name)
                             Text(text = showenItem.price.toString())
-                            Text(text = showenItem.name)
+                            Text(text = showenItem.description)
 
                         }
                     }
@@ -132,59 +132,69 @@ fun Catalog(navController: NavHostController) {
         ) {
 
             items(filteredList.count()) { index ->
-                Row(
+                //containerColor = Color(238, 238, 238)
+                Card(
                     modifier = Modifier
-                        .padding(0.dp, 0.dp, 0.dp, 7.dp)
-                        .clickable(onClick = {
-                            showenItem.name = filteredList[index].name
-                            showenItem.price = filteredList[index].price
-                            showDialog = true
-                        })
+                        .fillMaxWidth()
+                        .padding(4.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(238, 238, 238))
                 ) {
-                    Column {
-                        Text(text = filteredList[index].name, fontSize = 22.sp)
-                        Text(
-                            text = "${filteredList[index].price}",
-                            fontSize = 26.sp,
-                            fontWeight = FontWeight(600)
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.End
+                    Row(
+                        modifier = Modifier
+                            .padding(7.dp)
+                            .clickable(onClick = {
+                                showenItem.name = filteredList[index].name
+                                showenItem.price = filteredList[index].price
+                                showDialog = true
+                            })
                     ) {
-                        Button(
-                            onClick = {
-                                di.addOrder(
-                                    Order(
-                                        "ул. Пушкина",
-                                        list[index].name,
-                                        "Пользователь",
-                                        list[index].price
-                                    )
-                                )
-                            },
-                            modifier = Modifier.width(65.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.hsl(
-                                    0.168f,
-                                    0.6f,
-                                    0.62f,
-                                    1f
-                                )
+                        Column(modifier = Modifier.padding(6.dp)) {
+                            Text(
+                                text = filteredList[index].name,
+                                fontSize = 26.sp,
+                                fontWeight = FontWeight(550)
                             )
-                        ) {
-
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = "",
-                                modifier = Modifier.size(24.dp)
+                            Text(
+                                text = "${filteredList[index].price}",
+                                fontSize = 21.sp,
+                                fontWeight = FontWeight(500)
                             )
                         }
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Button(
+                                onClick = {
+                                    di.addOrder(
+                                        Order(
+                                            "ул. Пушкина",
+                                            list[index].name,
+                                            "Пользователь",
+                                            list[index].price
+                                        )
+                                    )
+                                },
+                                modifier = Modifier.size(70.dp),
+                                shape = CircleShape,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(255, 105, 105)
+                                )
+                            ) {
+
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "",
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            }
+                        }
+
                     }
 
                 }
-
             }
         }
 
