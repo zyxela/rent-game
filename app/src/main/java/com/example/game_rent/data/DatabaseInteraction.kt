@@ -145,7 +145,22 @@ class DatabaseInteraction {
 
     }
 
-    fun removeOrder(itemId: String) {
+    fun removeOrder(list: CatalogItem) {
+        connect()
+
+        db.collection("orders")
+            .document(list.id)
+            .delete()
+            .addOnSuccessListener {
+                Log.i("SUCCESS", "Item deleted")
+            }
+            .addOnFailureListener { e ->
+                Log.i("FAIL", "Item not deleted")
+            }
+
+    }
+
+    fun removeItem(itemId: String) {
         connect()
         db.collection("catalog")
             .document(itemId)

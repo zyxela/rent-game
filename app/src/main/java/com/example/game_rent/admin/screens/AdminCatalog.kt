@@ -99,7 +99,7 @@ fun AdminCatalog(navController: NavHostController) {
                             ) {
                                 Button(
                                     onClick = {
-                                        di.removeOrder(catalogList[index].id)
+                                        di.removeItem(catalogList[index].id)
                                         navController.navigate(Screen.AdminCatalogScreen.route)
                                     },
                                     modifier = Modifier.size(70.dp),

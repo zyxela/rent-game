@@ -175,6 +175,7 @@ fun MyCart(navController: NavHostController) {
                                         list[i].price
                                     )
                                 )
+                                di.removeOrder(list[i])
                                 navController.navigate(Screen.MyCartScreen.route)
                             }
                         }
